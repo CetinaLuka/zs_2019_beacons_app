@@ -1,0 +1,6 @@
+UUID - 128bit
+Major ID - grupiranje beaconov
+Minor ID
+Tx Power dBmW (decibelmiliwat)
+
+api key: AIzaSyBr7ziUydACzQuHt5Joj87oXuDFtNR1JVk

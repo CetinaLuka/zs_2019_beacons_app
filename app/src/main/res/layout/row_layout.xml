@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tip_action" android:layout_marginTop="5dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" android:fontFamily="@font/montserrat_bold" android:textSize="13sp"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/naslov_action" android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tip_action" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" android:fontFamily="@font/merriweather" android:textSize="18sp"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/opis_action" android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/naslov_action" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
+            android:fontFamily="@font/montserrat" android:textSize="13sp"/>
+    <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp" tools:srcCompat="@tools:sample/avatars[3]"
+            android:id="@+id/slika_action"
+            android:layout_marginTop="18dp"
+            app:layout_constraintTop_toTopOf="@+id/tip_action" android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/opis_action" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="32dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
