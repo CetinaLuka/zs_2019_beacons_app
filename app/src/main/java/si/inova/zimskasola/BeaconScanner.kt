@@ -12,10 +12,12 @@ class BeaconScanner(private val context: Context,
 
     fun start() {
         getClient(context).subscribe(this, buildOptions())
+        Log.i("Scanner", "started")
     }
 
     fun stop() {
         getClient(context).unsubscribe(this)
+        Log.i("Scanner", "Stopped")
     }
 
     private fun buildOptions(): SubscribeOptions {

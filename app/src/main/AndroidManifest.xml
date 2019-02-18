@@ -2,23 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.example.zimskasola">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- uses-permission android:name="android.permission.INTERNET"/ -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-
-        <meta-data
-            android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="AIzaSyA2G1NIRXDvoXi6_S8a7UL0f120p1nVtdc" />
-
-        <activity android:name="si.inova.zimskasola.MainActivity">
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="si.inova.zimskasola.Podatki_sobe">
+        </activity>
+        <activity android:name="si.inova.zimskasola.PrijavaZaslon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -26,6 +23,19 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+                android:name="com.google.android.nearby.messages.API_KEY"
+                android:value="AIzaSyBC31mAuV1dN9IbzdAT4FNYvghDNruo-dE"/>
+        <meta-data
+                android:name="preloaded_fonts"
+                android:resource="@array/preloaded_fonts"/>
+
+        <activity android:name="si.inova.zimskasola.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <service android:name="si.inova.zimskasola.beaconFinder"></service>
     </application>
 
 </manifest>

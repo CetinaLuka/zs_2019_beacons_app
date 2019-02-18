@@ -2,4 +2,11 @@
     <string name="app_name">Zimska šola</string>
     <string name="current_location">Trenutna lokacija:</string>
     <string name="unknown_location">Neznana lokacija</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_podatki_prostora">podatki_prostora</string>
+    <string name="title_lokacija">Moja lokacija</string>
+    <string name="title_prostori">Vsi prostori</string>
+    <string name="title_moznosti">Možnosti</string>
 </resources>
