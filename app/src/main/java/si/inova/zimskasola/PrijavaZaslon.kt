@@ -18,7 +18,7 @@ class PrijavaZaslon : AppCompatActivity() {
         setContentView(R.layout.activity_prijava_zaslon)
 
         prijavi_se_gumb.setOnClickListener {
-            val i = Intent(this, Podatki_sobe::class.java)
+            val i = Intent(this, Vpis::class.java)
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),0)
             startActivity(i)

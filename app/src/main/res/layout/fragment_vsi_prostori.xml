@@ -2,23 +2,32 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".Vsi_prostori">
+             android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_height="match_parent" android:layout_width="match_parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_vsi_prostori" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+                android:indeterminateTint="#000000"
+                android:indeterminate="true"/>
+        <TextView
+                android:text="Prostori"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="27dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp" android:fontFamily="@font/merriweather_bold_italic"
+                android:textSize="28sp" android:id="@+id/textView6"/>
+        <ListView
                 android:layout_width="0dp"
-                android:layout_height="250dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-        >
-
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" tools:src="@tools:sample/avatars[0]"
-                    tools:layout_editor_absoluteY="50dp" tools:layout_editor_absoluteX="254dp"
-                    android:id="@+id/imageView"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="0dp" android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/seznam_vseh_prostorov"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

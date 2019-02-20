@@ -4,6 +4,7 @@
           package="com.example.zimskasola">
     <!-- uses-permission android:name="android.permission.INTERNET"/ -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:allowBackup="false"
@@ -13,6 +14,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="si.inova.zimskasola.Preusmeri">
+        </activity>
+        <activity android:name="si.inova.zimskasola.Vpis">
+        </activity>
         <activity android:name="si.inova.zimskasola.Podatki_sobe">
         </activity>
         <activity android:name="si.inova.zimskasola.PrijavaZaslon">
@@ -35,7 +40,8 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <service android:name="si.inova.zimskasola.beaconFinder"></service>
+
+        <service android:name="si.inova.zimskasola.beaconFinder"/>
     </application>
 
 </manifest>

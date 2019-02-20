@@ -1,22 +1,20 @@
 package si.inova.zimskasola
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.Nullable
-import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.example.zimskasola.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_moja_lokacija_fragment.*
+import org.json.JSONArray
+import org.json.JSONObject
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,13 +31,29 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class Place_action(subtitle:String, title:String, type:String, type_icon:String){
-    var subtitle : String = subtitle
-    var title : String = title
-    var type : String = type
-    var type_icon : String = type_icon
-
-
+class Place_action(stuff_id:String, subtitle:String, title:String, type:String, type_icon:String){
+    var action_id : String = stuff_id
+    var description : String = subtitle
+    var name : String = title
+    var category : String = type
+    var icon : String = type_icon
+}
+class Place(title:String, description:String, floors:Array<Floor>){
+    var title:String = title
+    var description:String = description
+    var floors:Array<Floor> = floors
+}
+class Floor(floor_id:String, name:String, rooms:Array<Room>){
+    var floor_id:String = floor_id
+    var name:String = name
+    var rooms:Array<Room> = rooms
+}
+class Room(room_id:String, beacon_id:String, name:String, image:String, stuff:Array<Place_action>){
+    var room_id:String = room_id
+    var beacon_id:String = beacon_id
+    var name:String = name
+    var image:String = image
+    var stuff:Array<Place_action> = stuff
 }
 class Moja_lokacija : Fragment() {
     val db = FirebaseFirestore.getInstance()
@@ -50,33 +64,46 @@ class Moja_lokacija : Fragment() {
         val context = view.context
         val bundle = this.arguments
         if (bundle != null) {
-            val id_prostora = bundle.getString("id_prostora", "0")
-            db.document("locations/1/places/$id_prostora/").get().addOnSuccessListener {result ->
-                val floor = result.get("floor").toString()
-                val name = result.get("name").toString()
-                val image = result.get("image").toString()
-                ime_sobe.text = name
-                nadstropje.text = floor
+            val floor = bundle.get("floor").toString()
+            val room = bundle.get("room").toString()
+            val strResp = bundle.get("json").toString()
+            val jsonObj: JSONObject = JSONObject(strResp)
 
-                val slika_prostora : ImageView = slika_sobe
-
-                Glide.with(this)
-                    .load(image)
-                    .into(slika_sobe)
-            }
-            db.collection("locations/1/places/$id_prostora/description_items")
-                .get()
-                .addOnSuccessListener {result ->
-                    var seznam = arrayListOf<Place_action>()
-                    for(data in result){
-                        seznam.add(Place_action(data.get("subtitle").toString(), data.get("title").toString(), data.get("type").toString(), data.get("type_icon").toString()))
+            val address = jsonObj.get("description").toString()
+            val floors: JSONArray = jsonObj.getJSONArray("floors")
+            var stuffArray = arrayListOf<Place_action>()
+            for (i in 0 until floors.length()) {
+                var nadstropje_obj: JSONObject = floors.getJSONObject(i)
+                if(nadstropje_obj.get("floor_id").toString().trim() == floor){
+                    view.findViewById<TextView>(R.id.nahajas_se).text = "NAHAJAŠ SE V"
+                    view.findViewById<TextView>(R.id.nadstropje_seznam).text = nadstropje_obj.get("name").toString()
+                    val rooms: JSONArray = nadstropje_obj.getJSONArray("rooms")
+                    for (j in 0 until rooms.length()) {
+                        var soba: JSONObject = rooms.getJSONObject(j)
+                        if(soba.get("room_id").toString().trim() == room){
+                            view.findViewById<TextView>(R.id.ime_sobe).text = soba.get("name").toString()
+                            Glide.with(view.context)
+                                .load(soba.get("image"))
+                                .into(view.findViewById(R.id.slika_sobe))
+                            var stuff: JSONArray = soba.getJSONArray("stuff")
+                            for(k in 0 until stuff.length()){
+                                val action = stuff.getJSONObject(k)
+                                val place_action = Place_action(
+                                    action.get("stuff_id").toString(),
+                                    action.get("name").toString(),
+                                    action.get("category").toString(),
+                                    action.get("description").toString(),
+                                    action.get("icon").toString())
+                                stuffArray.add(place_action)
+                            }
+                        }
                     }
-                    val description_items = view.findViewById<ListView>(R.id.description_items_list)
-
-                    //val adapter = ArrayAdapter<Place_action>(context,android.R.layout.simple_list_item_1, seznam)
-                    val adapter = MyAdapter(context, seznam)
-                    description_items.adapter = adapter
                 }
+            }
+            view.findViewById<ProgressBar>(R.id.progress_moja_lokacija).visibility = View.GONE
+            view.findViewById<TextView>(R.id.iscem_sobo).visibility = View.GONE
+            view.findViewById<ListView>(R.id.description_items_list).adapter = MyAdapter(view.context, stuffArray)
+
         }
         return view
     }
@@ -96,11 +123,11 @@ class MyAdapter(context: Context, seznam:ArrayList<Place_action>) : BaseAdapter(
         val opis_action = row_layout.findViewById<TextView>(R.id.opis_action)
         val slika_action= row_layout.findViewById<ImageView>(R.id.slika_action)
         val current_item = seznam_akcij.get(position)
-        tip_action.text = current_item.type
-        naslov_action.text = current_item.title
-        opis_action.text = current_item.subtitle
+        tip_action.text = current_item.category
+        naslov_action.text = current_item.name
+        opis_action.text = current_item.description
         Glide.with(mContext)
-            .load(current_item.type_icon)
+            .load(current_item.icon)
             .into(slika_action)
 
         return row_layout

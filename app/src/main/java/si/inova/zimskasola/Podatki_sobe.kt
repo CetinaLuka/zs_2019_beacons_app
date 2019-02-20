@@ -1,69 +1,98 @@
 package si.inova.zimskasola
 
 import android.app.*
-import android.bluetooth.BluetoothManager
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.MediaPlayer
-import android.media.audiofx.BassBoost
-import android.os.Build
 import android.os.Build.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.IBinder
-import android.provider.Settings
+import android.os.PersistableBundle
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_podatki_sobe.*
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_moja_lokacija_fragment.*
-import si.inova.zimskasola.BeaconScanner.Listener
-import android.R
-
-
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
+import java.lang.Exception
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.Charset
 
 
 class Podatki_sobe : AppCompatActivity(), BeaconScanner.Listener {
     private var scanner = BeaconScanner(this, this)
-    val db = FirebaseFirestore.getInstance()
     override fun onBeaconFound(data: String) {
-        /*val n = Intent(this, Moja_lokacija::class.java)
-        n.putExtra("id_prostora",data)
-        val contentIntent = PendingIntent.getActivity(this, 0, n, 0)*/
 
+        val beaconJson = JSONObject(data)
+        val floor = beaconJson.get("floor_id").toString().trim()
+        val room = beaconJson.get("room_id").toString()
+        try {
+            val url = "https://firebasestorage.googleapis.com/v0/b/zs-beacons-2019.appspot.com/o/25022c4a-3035-11e9-bb6a-a5c92278bce1.json?alt=media&token=4607d4e9-c453-4ce8-9a9a-3b3d76ce244b"
+            val queue = Volley.newRequestQueue(this)
+            val stringReq = StringRequest(
+                Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    var strResp = URLDecoder.decode(URLEncoder.encode(response.toString(), "iso8859-1"),"UTF-8")
+                    Log.i("STR", strResp)
+                    moja_lokacija = Moja_lokacija()
+                    val bundle = Bundle()
+                    bundle.putString("floor", floor)
+                    bundle.putString("room", room)
+                    bundle.putString("json", strResp)
+                    moja_lokacija.setArguments(bundle)
+                    loadFragment(moja_lokacija)
 
-        var mBuilder = NotificationCompat.Builder(this, "0")
-            .setSmallIcon(com.example.zimskasola.R.drawable.ic_beacons_icon_small)
-            .setContentTitle("Vstopili ste v sobo $data")
-            .setContentText("Zaznali smo nov prostor. Poglejte kaj lahko v njem počnete")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            //.setContentIntent(contentIntent)
-            .setAutoCancel(true)
+                    val jsonObj: JSONObject = JSONObject(strResp)
 
+                    location_adress.text = jsonObj.get("description").toString()
+                    location_name.text = jsonObj.get("title").toString()
+                    val floors: JSONArray = jsonObj.getJSONArray("floors")
+                    for (i in 0 until floors.length()) {
+                        var nadstropje: JSONObject = floors.getJSONObject(i)
+                        if(nadstropje.get("floor_id").toString().trim() == floor){
+                            val rooms: JSONArray = nadstropje.getJSONArray("rooms")
+                            for (j in 0 until rooms.length()) {
+                                var soba: JSONObject = rooms.getJSONObject(j)
+                                if(soba.get("room_id").toString().trim() == room){
+                                    val soba_name = soba.get("name").toString()
 
-        with(NotificationManagerCompat.from(this)){
-            notify(0, mBuilder.build())
+                                    val n = Intent(this, Podatki_sobe::class.java)
+                                    n.putExtra("floor",floor)
+                                    n.putExtra("room",room)
+                                    n.putExtra("json",strResp)
+                                    val contentIntent = PendingIntent.getActivity(this, 0, n, 0)
+
+                                    var mBuilder = NotificationCompat.Builder(this, "0")
+                                        .setSmallIcon(com.example.zimskasola.R.drawable.ic_beacons_icon_small)
+                                        .setContentTitle("Vstopili ste v sobo $soba_name")
+                                        .setContentText("Zaznali smo nov prostor. Poglejte kaj lahko v njem počnete")
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setContentIntent(contentIntent)
+                                        .setAutoCancel(true)
+                                    with(NotificationManagerCompat.from(this)){
+                                        notify(0, mBuilder.build())
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                },
+                Response.ErrorListener {
+                    loadFragment(napaka)
+                })
+            queue.add(stringReq)
         }
-        db.document("locations/1/").get().addOnSuccessListener {result ->
-            val name = result.get("name")
-            val address = result.get("address")
-            Log.i("Rezultat", "Name: $name, address: $address")
-            location_adress.text = address.toString()
-            location_name.text = name.toString()
+        catch (ex: Exception){
+            loadFragment(napaka)
         }
-
-
-        moja_lokacija = Moja_lokacija()
-        val bundle = Bundle()
-        bundle.putString("id_prostora", data)
-        moja_lokacija.setArguments(bundle)
-        loadFragment(moja_lokacija)
 
     }
 
@@ -82,37 +111,56 @@ class Podatki_sobe : AppCompatActivity(), BeaconScanner.Listener {
     var moja_lokacija = Moja_lokacija()
     val vsi_prostori = Vsi_prostori()
     val moznosti = Moznosti()
+    val napaka = Napaka()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.zimskasola.R.layout.activity_podatki_sobe)
 
-
-        val id_prostora = intent.getStringExtra("id_prostora")
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-
-        if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            val name = "chanel"
-            val descriptionText = "chanel"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("0", name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+        if(intent.getStringExtra("floor")!=null){
+            moja_lokacija = Moja_lokacija()
+            val bundle = Bundle()
+            bundle.putString("floor", intent.getStringExtra("floor"))
+            bundle.putString("room", intent.getStringExtra("room"))
+            bundle.putString("json", intent.getStringExtra("json"))
+            moja_lokacija.setArguments(bundle)
+            loadFragment(moja_lokacija)
+            bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
         }
-        loadFragment(moja_lokacija)
-        bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
+        else{
+            scanner.start()
+
+            if (VERSION.SDK_INT >= VERSION_CODES.O) {
+                val name = "chanel"
+                val descriptionText = "chanel"
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val channel = NotificationChannel("0", name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+            }
+            loadFragment(moja_lokacija)
+            bottomNavigationView.setOnNavigationItemSelectedListener(navigationListener)
+        }
     }
     override fun onStart() {
         super.onStart()
-        scanner.start()
+
     }
 
     override fun onStop() {
         super.onStop()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+
+    }
+    override fun onDestroy() {
+        super.onDestroy()
         scanner.stop()
     }
 
@@ -122,7 +170,7 @@ class Podatki_sobe : AppCompatActivity(), BeaconScanner.Listener {
             supportFragmentManager
                 .beginTransaction()
                 .replace(com.example.zimskasola.R.id.soba_fragment_holder, fragment)
-                //.addToBackStack (null)
+                .addToBackStack (null)
                 .commit()
             return true
         }
