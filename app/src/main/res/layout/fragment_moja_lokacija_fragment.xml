@@ -72,6 +72,14 @@
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                 android:fontFamily="@font/montserrat" android:textSize="22sp"/>
+        <TextView
+                android:text="Poskrbite da imate vklopljen bluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/vklopi_bluetooth"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/iscem_sobo" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:fontFamily="@font/montserrat"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

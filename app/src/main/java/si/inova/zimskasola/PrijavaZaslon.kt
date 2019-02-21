@@ -18,10 +18,15 @@ class PrijavaZaslon : AppCompatActivity() {
         setContentView(R.layout.activity_prijava_zaslon)
 
         prijavi_se_gumb.setOnClickListener {
-            val i = Intent(this, Vpis::class.java)
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),0)
-            startActivity(i)
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),0)
+            }
+            else{
+                val i = Intent(this, Vpis::class.java)
+                startActivity(i)
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import org.json.JSONArray
 import org.json.JSONObject
-
+import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,8 +56,6 @@ class Room(room_id:String, beacon_id:String, name:String, image:String, stuff:Ar
     var stuff:Array<Place_action> = stuff
 }
 class Moja_lokacija : Fragment() {
-    val db = FirebaseFirestore.getInstance()
-    val storage = FirebaseStorage.getInstance()
     @Nullable
     override fun onCreateView(inflater: LayoutInflater, @Nullable container: ViewGroup?, @Nullable savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.zimskasola.R.layout.fragment_moja_lokacija_fragment, null)
@@ -102,6 +100,7 @@ class Moja_lokacija : Fragment() {
             }
             view.findViewById<ProgressBar>(R.id.progress_moja_lokacija).visibility = View.GONE
             view.findViewById<TextView>(R.id.iscem_sobo).visibility = View.GONE
+            view.findViewById<TextView>(R.id.vklopi_bluetooth).visibility = View.GONE
             view.findViewById<ListView>(R.id.description_items_list).adapter = MyAdapter(view.context, stuffArray)
 
         }

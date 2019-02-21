@@ -9,4 +9,12 @@
     <string name="title_lokacija">Moja lokacija</string>
     <string name="title_prostori">Vsi prostori</string>
     <string name="title_moznosti">Možnosti</string>
+
+    <array name="gibanje_meni">
+        <item>30 sekund</item>
+        <item>15 minut</item>
+        <item>1 ura</item>
+        <item>2 ure</item>
+        <item>5 ur</item>
+    </array>
 </resources>

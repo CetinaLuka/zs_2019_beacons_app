@@ -80,7 +80,13 @@ class Vsi_prostori : Fragment() {
             queue.add(stringReq)
         }
         catch (ex: Exception){
-
+            val fragmentManager2 = fragmentManager
+            val fragmentTransaction2 = fragmentManager2!!.beginTransaction()
+            val napaka = Napaka()
+            fragmentTransaction2.addToBackStack(null)
+            fragmentTransaction2.hide(this)
+            fragmentTransaction2.add(R.id.soba_fragment_holder, napaka)
+            fragmentTransaction2.commit()
         }
 
         return view

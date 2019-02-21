@@ -11,11 +11,37 @@
                 android:text="ODJAVA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/odjava" android:layout_marginTop="32dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" android:background="#000000"
+                android:id="@+id/odjava"
+                android:background="#000000"
                 android:fontFamily="@font/montserrat_bold" android:textSize="15sp"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp" android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" android:text="Obvestilo za gibanje"
+                android:fontFamily="@font/montserrat"/>
+        <TextView
+                android:text="Nastavitve"
+                android:layout_width="wrap_content"
+                android:layout_height="41dp"
+                android:id="@+id/textView7" android:layout_marginTop="26dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/merriweather_bold_italic"
+                android:textSize="28sp"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/gibanje_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="@+id/textView"
+                app:layout_constraintBottom_toBottomOf="@+id/textView" android:entries="@array/gibanje_meni"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
